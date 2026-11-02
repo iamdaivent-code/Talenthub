@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TalentHub | Discover Creative Talent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo">Talent<span>Hub.</span></div>
+    <div class="nav-label">MENU</div>
+    <nav>
+      <a class="nav-link active" data-page="home"><i class="fa-solid fa-house"></i> Home</a>
+      <a class="nav-link" data-page="explore"><i class="fa-solid fa-compass"></i> Explore Talent</a>
+      <a class="nav-link" data-page="dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+      <a class="nav-link" data-page="messages"><i class="fa-regular fa-message"></i> Messages</a>
+    </nav>
+    <div class="nav-label">ACCOUNT</div>
+    <nav>
+      <a class="nav-link" data-page="pricing"><i class="fa-solid fa-crown"></i> Subscription</a>
+      <a class="nav-link" data-page="profile"><i class="fa-regular fa-user"></i> My Profile</a>
+    </nav>
+    <div class="sidebar-bottom"><a class="nav-link" id="settingsBtn"><i class="fa-solid fa-gear"></i> Settings</a></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input id="globalSearch" placeholder="Search talent, skills..."></div>
+      <div class="top-actions">
+        <button class="icon-btn" id="notificationsBtn" aria-label="Notifications"><i class="fa-regular fa-bell"></i></button>
+        <img class="avatar" src="https://i.pravatar.cc/100?img=12" alt="Profile">
+      </div>
+    </header>
+
+    <div class="content">
+      <section class="page active" id="home">
+        <div class="hero">
+          <div>
+            <span class="eyebrow">THE CREATIVE COMMUNITY</span>
+            <h1>Discover talent.<br>Build something amazing.</h1>
+            <p>Connect with creative professionals, discover new skills and turn your ideas into reality.</p>
+            <button class="primary-btn" data-go="explore">Explore Talent <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+          <div class="hero-art"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+        </div>
+
+        <div class="section-heading"><h2>Explore Categories</h2><a data-go="explore">View all</a></div>
+        <div class="categories">
+          <button class="category" data-category="Video Editor"><i class="fa-solid fa-video"></i><p>Video Editing</p></button>
+          <button class="category" data-category="Graphic Designer"><i class="fa-solid fa-pen-nib"></i><p>Design</p></button>
+          <button class="category" data-category="Photographer"><i class="fa-solid fa-camera"></i><p>Photography</p></button>
+          <button class="category" data-category="Singer"><i class="fa-solid fa-music"></i><p>Singing</p></button>
+          <button class="category" data-category="Web Developer"><i class="fa-solid fa-code"></i><p>Development</p></button>
+          <button class="category" data-category="Animator"><i class="fa-solid fa-film"></i><p>Animation</p></button>
+        </div>
+
+        <div class="section-heading"><h2>Featured Creators</h2><a data-go="explore">Explore all <i class="fa-solid fa-arrow-right"></i></a></div>
+        <div class="talent-grid" id="homeTalent"></div>
+      </section>
+
+      <section class="page" id="explore">
+        <div class="page-heading"><span class="eyebrow">DISCOVER PEOPLE</span><h1>Explore Talent</h1><p>Find the right creative professional for your next project.</p></div>
+        <div class="filters" id="filters">
+          <button class="filter-btn active" data-filter="All">All</button>
+          <button class="filter-btn" data-filter="Video Editor">Video Editors</button>
+          <button class="filter-btn" data-filter="Graphic Designer">Designers</button>
+          <button class="filter-btn" data-filter="Photographer">Photographers</button>
+          <button class="filter-btn" data-filter="Singer">Singers</button>
+          <button class="filter-btn" data-filter="Web Developer">Developers</button>
+          <button class="filter-btn" data-filter="Animator">Animators</button>
+        </div>
+        <p class="results-line" id="resultCount">Showing all creators</p>
+        <div class="talent-grid" id="exploreTalent"></div>
+      </section>
+
+      <section class="page" id="dashboard">
+        <div class="page-heading"><span class="eyebrow">CREATOR WORKSPACE</span><h1>Creator Dashboard</h1><p>Manage your profile and track your performance.</p></div>
+        <div class="stats">
+          <div class="stat-card"><i class="fa-regular fa-eye"></i><h2>1,240</h2><p>Profile Views</p></div>
+          <div class="stat-card"><i class="fa-regular fa-message"></i><h2>28</h2><p>Client Inquiries</p></div>
+          <div class="stat-card"><i class="fa-solid fa-folder-open"></i><h2 id="projectCount">03</h2><p>Portfolio Projects</p></div>
+        </div>
+        <div class="panel"><h3>Complete your creator profile</h3><p>A complete profile helps clients understand your skills and experience.</p><button class="primary-btn" data-go="profile">Edit Profile</button></div>
+        <div class="panel"><h3>Membership Status</h3><p id="membershipStatus">You are currently using the Free plan.</p><button class="primary-btn" data-go="pricing">Upgrade Plan</button></div>
+      </section>
+
+      <section class="page" id="messages">
+        <div class="page-heading"><span class="eyebrow">CONNECTIONS</span><h1>Messages & Inquiries</h1><p>Manage conversations with potential clients.</p></div>
+        <div class="panel"><h3>Your conversations</h3><p>No conversations yet. When clients contact you, inquiries will appear here.</p></div>
+      </section>
+
+      <section class="page" id="pricing">
+        <div class="page-heading"><span class="eyebrow">MEMBERSHIP</span><h1>Choose Your Plan</h1><p>Grow your visibility and reach more clients.</p></div>
+        <div class="pricing-grid">
+          <article class="plan"><h3>Creator Pro</h3><p>For growing creators</p><div class="amount">₹49 <small>/ month</small></div><ul><li><i class="fa-solid fa-check"></i> 10 portfolio uploads</li><li><i class="fa-solid fa-check"></i> Creator profile</li><li><i class="fa-solid fa-check"></i> Client inquiries</li><li><i class="fa-solid fa-check"></i> Basic analytics</li></ul><button class="full-btn" data-plan="pro">Choose Pro</button></article>
+          <article class="plan featured"><span class="popular">POPULAR</span><h3>Creator Plus</h3><p>For serious professionals</p><div class="amount">₹99 <small>/ month</small></div><ul><li><i class="fa-solid fa-check"></i> Higher portfolio limit</li><li><i class="fa-solid fa-check"></i> Priority listing</li><li><i class="fa-solid fa-check"></i> Advanced analytics</li><li><i class="fa-solid fa-check"></i> Profile customization</li><li><i class="fa-solid fa-check"></i> Verified badge after verification</li></ul><button class="full-btn" data-plan="plus">Choose Plus</button></article>
+        </div>
+      </section>
+
+      <section class="page" id="profile">
+        <div class="page-heading"><span class="eyebrow">YOUR IDENTITY</span><h1>My Creator Profile</h1><p>Manage the information clients see about you.</p></div>
+        <div class="panel profile-panel">
+          <div class="creator-row"><img id="profileAvatar" src="https://i.pravatar.cc/100?img=12" alt="Creator"><div><strong id="profileName">Your Name</strong><p id="profileSkill">Creative Professional</p></div></div>
+          <p id="profileBio" class="profile-bio">Add a short introduction about your work and skills.</p>
+          <button class="primary-btn" id="editProfileBtn">Edit Profile</button>
+        </div>
+        <div class="panel"><h3>Portfolio</h3><p>Your uploaded projects will be displayed here. Portfolio uploads can be connected to cloud storage later.</p><button class="primary-btn" id="addProjectBtn"> <i class="fa-solid fa-plus"></i> Add Project</button><div id="portfolioList"></div></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<div class="modal-bg" id="profileModal" aria-hidden="true">
+  <div class="modal">
+    <button class="close-modal" id="closeModal" aria-label="Close">×</button>
+    <h2>Edit Your Profile</h2><p>Update your creator information.</p>
+    <form id="profileForm">
+      <label>Full name<input id="creatorName" required maxlength="60" placeholder="Your name"></label>
+      <label>Main skill<input id="creatorSkill" required maxlength="60" placeholder="e.g. Video Editor"></label>
+      <label>Short bio<textarea id="creatorBio" required maxlength="300" placeholder="Tell clients about your work"></textarea></label>
+      <button class="full-btn" type="submit">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+<script src="js/app.js"></script>
+</body>
+</html>
