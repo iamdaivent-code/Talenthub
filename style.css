@@ -70,3 +70,81 @@ button,input,textarea{font:inherit}button{cursor:pointer;border:0}
 .categories{grid-template-columns:repeat(3,1fr);gap:8px}.category{padding:15px 5px}
 .talent-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.pricing-grid{grid-template-columns:1fr}
 }
+/* ===== TALENTHUB LOGIN DESIGN ===== */
+
+#talenthub-auth {
+  width: min(92%, 420px);
+  margin: 45px auto;
+  padding: 32px 25px;
+  background: #ffffff;
+  border: 1px solid #ecebf2;
+  border-radius: 20px;
+  box-shadow: 0 15px 45px rgba(35, 25, 80, 0.12);
+  text-align: center;
+  font-family: Inter, Arial, sans-serif;
+}
+
+#talenthub-auth h2 {
+  color: #17152b;
+  font-size: 25px;
+  font-weight: 800;
+  margin-bottom: 25px;
+}
+
+#talenthub-auth input {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin: 13px 0;
+  border: 1px solid #ecebf2;
+  border-radius: 10px;
+  background: #f7f7fb;
+  outline: none;
+  font-size: 14px;
+}
+
+#talenthub-auth input:focus {
+  border-color: #6c4cff;
+  box-shadow: 0 0 0 3px #6c4cff20;
+}
+
+#talenthub-auth button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  border-radius: 10px;
+  background: #6c4cff;
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+#talenthub-auth button:hover {
+  background: #5235db;
+  transform: translateY(-2px);
+}
+
+#talenthub-auth #google-btn {
+  background: white;
+  color: #333;
+  border: 1px solid #dedde7;
+}
+
+#talenthub-auth #logout-btn {
+  background: #17152b;
+}
+
+#auth-message {
+  margin-top: 16px;
+  color: #6c4cff;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+@media(max-width: 480px) {
+  #talenthub-auth {
+    margin: 25px auto;
+    padding: 25px 18px;
+  }
+}
