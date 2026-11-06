@@ -241,17 +241,22 @@ async function registerUser(userData) {
 }
 */
 
-// ===== TALENTHUB PREMIUM AUTHENTICATION =====
+/* ===== TALENTHUB PREMIUM AUTHENTICATION ===== */
 
 const SUPABASE_URL = "https://mlloveelzlnkoygefhcu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_1fxhNvf73Qa8lAa31mNQUA_71NFIHt4"
+
 const authScript = document.createElement("script");
 authScript.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
 
 authScript.onload = async () => {
-  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
   const style = document.createElement("style");
+
   style.textContent = `
     #talenthub-auth-screen {
       position: fixed;
@@ -264,6 +269,7 @@ authScript.onload = async () => {
       justify-content: center;
       overflow-y: auto;
       padding: 22px;
+      box-sizing: border-box;
       font-family: Inter, Arial, sans-serif;
     }
 
@@ -272,20 +278,23 @@ authScript.onload = async () => {
       max-width: 1000px;
       min-height: 570px;
       display: grid;
-      grid-template-columns: 1fr 0.9fr;
+      grid-template-columns: 1fr .9fr;
       background: #151a30;
       border: 1px solid #303653;
       border-radius: 26px;
       overflow: hidden;
+      margin: auto;
       box-shadow: 0 25px 80px #0008;
     }
 
     .th-left {
-      padding: 45px 35px;
+      padding: 40px 35px;
       background: radial-gradient(circle at 20% 20%, #493a91, #171a37 65%);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      box-sizing: border-box;
+      min-width: 0;
     }
 
     .th-logo {
@@ -294,37 +303,42 @@ authScript.onload = async () => {
       letter-spacing: -1px;
     }
 
-    .th-logo span { color: #a995ff; }
+    .th-logo span {
+      color: #a995ff;
+    }
 
     .th-tag {
       color: #bdb6ff;
       font-size: 12px;
-      letter-spacing: 3px;
+      letter-spacing: 2px;
       font-weight: 700;
     }
 
     .th-heading {
       font-size: clamp(32px, 5vw, 48px);
-      line-height: 1.12;
+      line-height: 1.2;
       font-weight: 850;
-      margin: 15px 0;
+      margin: 17px 0;
+      color: #fff;
+      overflow-wrap: anywhere;
     }
 
     .th-description {
       color: #c2c5da;
       line-height: 1.8;
       font-size: 14px;
+      overflow-wrap: anywhere;
     }
 
     .th-skills {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-top: 28px;
+      margin-top: 25px;
     }
 
     .th-skill {
-      padding: 13px;
+      padding: 13px 10px;
       background: #ffffff12;
       border: 1px solid #ffffff20;
       border-radius: 12px;
@@ -337,6 +351,8 @@ authScript.onload = async () => {
       display: flex;
       flex-direction: column;
       justify-content: center;
+      box-sizing: border-box;
+      min-width: 0;
     }
 
     .th-right h2 {
@@ -389,7 +405,9 @@ authScript.onload = async () => {
       font-size: 14px;
     }
 
-    .th-field:focus { border-color: #917cff; }
+    .th-field:focus {
+      border-color: #917cff;
+    }
 
     .th-main-btn {
       width: 100%;
@@ -402,6 +420,11 @@ authScript.onload = async () => {
       font-size: 14px;
       cursor: pointer;
       margin-top: 5px;
+    }
+
+    .th-main-btn:disabled {
+      opacity: .6;
+      cursor: wait;
     }
 
     .th-google {
@@ -443,40 +466,129 @@ authScript.onload = async () => {
       padding: 11px 17px;
       border-radius: 25px;
       font-weight: bold;
+      cursor: pointer;
     }
 
-    @media(max-width:700px) {
-      #talenthub-auth-screen { padding: 12px; }
-      .th-shell {
-        display: block;
-        min-height: auto;
-        max-width: 430px;
+    /* MOBILE RESPONSIVE DESIGN */
+
+    @media (max-width: 700px) {
+      #talenthub-auth-screen {
+        align-items: flex-start;
+        justify-content: center;
+        padding: 12px;
       }
-      .th-left { padding: 23px; }
-      .th-heading { font-size: 30px; }
-      .th-skills { margin-top: 18px; }
-      .th-right { padding: 27px 22px; }
+
+      .th-shell {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 430px;
+        min-height: auto;
+        margin: auto;
+        overflow: visible;
+        border-radius: 20px;
+      }
+
+      .th-left {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        min-height: auto;
+        padding: 25px 22px 22px;
+      }
+
+      .th-logo {
+        font-size: 23px;
+        margin-bottom: 28px;
+      }
+
+      .th-tag {
+        font-size: 10px;
+        letter-spacing: 1.5px;
+      }
+
+      .th-heading {
+        font-size: 30px;
+        line-height: 1.25;
+        margin: 14px 0;
+        overflow: visible;
+      }
+
+      .th-description {
+        font-size: 13px;
+        line-height: 1.7;
+        margin: 0;
+      }
+
+      .th-skills {
+        margin-top: 19px;
+        gap: 8px;
+      }
+
+      .th-skill {
+        padding: 11px 9px;
+        font-size: 11px;
+      }
+
+      .th-left small {
+        display: block;
+        margin-top: 22px;
+      }
+
+      .th-right {
+        padding: 28px 22px;
+      }
+
+      .th-right h2 {
+        font-size: 25px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .th-heading {
+        font-size: 27px;
+      }
+
+      .th-left {
+        padding: 22px 17px;
+      }
+
+      .th-right {
+        padding: 24px 17px;
+      }
     }
   `;
+
   document.head.appendChild(style);
 
   const root = document.createElement("div");
   root.id = "talenthub-auth-screen";
+
   root.innerHTML = `
     <div class="th-shell">
+
       <section class="th-left">
-        <div class="th-logo">Talent<span>Hub</span> ✦</div>
+
+        <div class="th-logo">
+          Talent<span>Hub</span> ✦
+        </div>
+
         <div>
-          <div class="th-tag">DISCOVER · CREATE · CONNECT</div>
+          <div class="th-tag">
+            DISCOVER · CREATE · CONNECT
+          </div>
+
           <div class="th-heading">
             Your talent.<br>
             Your stage.<br>
             Your future.
           </div>
+
           <p class="th-description">
             A place where creative minds meet new opportunities.
             Showcase your skills and let the world discover what you can do.
           </p>
+
           <div class="th-skills">
             <div class="th-skill">✦ Graphic Designers</div>
             <div class="th-skill">▶ Video Editors</div>
@@ -484,42 +596,75 @@ authScript.onload = async () => {
             <div class="th-skill">⌘ Developers</div>
           </div>
         </div>
-        <small style="color:#aeb0d0">TalentHub · Where talent meets opportunity.</small>
+
+        <small style="color:#aeb0d0">
+          TalentHub · Where talent meets opportunity.
+        </small>
+
       </section>
 
       <section class="th-right">
+
         <h2 id="th-title">Create your account</h2>
+
         <p class="th-subtitle" id="th-subtitle">
           Join a community built around your talent.
         </p>
 
         <div class="th-tabs">
-          <button id="th-signup-tab" class="active">Sign Up</button>
-          <button id="th-login-tab">Login</button>
+          <button id="th-signup-tab" class="active" type="button">
+            Sign Up
+          </button>
+          <button id="th-login-tab" type="button">
+            Login
+          </button>
         </div>
 
         <form id="th-form">
-          <input class="th-field" id="th-name"
-            placeholder="Your full name" autocomplete="name" required>
 
-          <input class="th-field" id="th-email"
-            type="email" placeholder="Email address"
-            autocomplete="email" required>
+          <input
+            class="th-field"
+            id="th-name"
+            placeholder="Your full name"
+            autocomplete="name"
+            required
+          >
 
-          <input class="th-field" id="th-password"
-            type="password" placeholder="Password (minimum 6 characters)"
-            autocomplete="new-password" minlength="6" required>
+          <input
+            class="th-field"
+            id="th-email"
+            type="email"
+            placeholder="Email address"
+            autocomplete="email"
+            required
+          >
+
+          <input
+            class="th-field"
+            id="th-password"
+            type="password"
+            placeholder="Password (minimum 6 characters)"
+            autocomplete="new-password"
+            minlength="6"
+            required
+          >
 
           <button class="th-main-btn" id="th-submit" type="submit">
             Create my account →
           </button>
+
         </form>
 
-        <div class="th-divider">OR CONTINUE WITH</div>
-        <button class="th-google" id="th-google">
+        <div class="th-divider">
+          OR CONTINUE WITH
+        </div>
+
+        <button class="th-google" id="th-google" type="button">
           Continue with Google
         </button>
+
         <p id="th-message" aria-live="polite"></p>
+
       </section>
     </div>
   `;
@@ -555,81 +700,108 @@ authScript.onload = async () => {
     mode = newMode;
     const signup = mode === "signup";
 
-    document.getElementById("th-signup-tab").classList.toggle("active", signup);
-    document.getElementById("th-login-tab").classList.toggle("active", !signup);
+    document.getElementById("th-signup-tab")
+      .classList.toggle("active", signup);
+
+    document.getElementById("th-login-tab")
+      .classList.toggle("active", !signup);
 
     nameField.style.display = signup ? "block" : "none";
     nameField.required = signup;
-    passwordField.autocomplete = signup ? "new-password" : "current-password";
+
+    passwordField.autocomplete =
+      signup ? "new-password" : "current-password";
 
     document.getElementById("th-title").textContent =
       signup ? "Create your account" : "Welcome back";
 
     document.getElementById("th-subtitle").textContent =
-      signup ? "Join a community built around your talent." :
-      "Log in and continue your journey.";
+      signup
+        ? "Join a community built around your talent."
+        : "Log in and continue your journey.";
 
-    submit.textContent = signup ? "Create my account →" : "Login to TalentHub →";
+    submit.textContent =
+      signup ? "Create my account →" : "Login to TalentHub →";
+
     message.textContent = "";
   }
 
-  document.getElementById("th-signup-tab").onclick = () => setMode("signup");
-  document.getElementById("th-login-tab").onclick = () => setMode("login");
+  document.getElementById("th-signup-tab").onclick =
+    () => setMode("signup");
 
-  document.getElementById("th-form").onsubmit = async event => {
-    event.preventDefault();
-    message.textContent = "Please wait...";
-    submit.disabled = true;
+  document.getElementById("th-login-tab").onclick =
+    () => setMode("login");
 
-    try {
-      const email = emailField.value.trim();
-      const password = passwordField.value;
+  document.getElementById("th-form").onsubmit =
+    async event => {
+      event.preventDefault();
 
-      if (mode === "signup") {
-        const { data, error } = await db.auth.signUp({
-          email,
-          password,
-          options: {
-            data: { full_name: nameField.value.trim() }
+      message.textContent = "Please wait...";
+      submit.disabled = true;
+
+      try {
+        const email = emailField.value.trim();
+        const password = passwordField.value;
+
+        if (mode === "signup") {
+          const { data, error } = await db.auth.signUp({
+            email,
+            password,
+            options: {
+              data: {
+                full_name: nameField.value.trim()
+              }
+            }
+          });
+
+          if (error) throw error;
+
+          if (data.session) {
+            message.textContent = "Account created successfully!";
+            showApp();
+          } else {
+            message.textContent =
+              "Account created! Please confirm your email, then log in.";
           }
-        });
 
-        if (error) throw error;
-
-        if (data.session) {
-          message.textContent = "Account created successfully!";
-          showApp();
         } else {
-          message.textContent =
-            "Account created! Please confirm your email, then log in.";
+          const { error } = await db.auth.signInWithPassword({
+            email,
+            password
+          });
+
+          if (error) throw error;
+
+          message.textContent = "Login successful!";
+          showApp();
         }
-      } else {
-        const { error } = await db.auth.signInWithPassword({
-          email,
-          password
-        });
 
-        if (error) throw error;
-        message.textContent = "Login successful!";
+      } catch (error) {
+        message.textContent =
+          error.message || "Something went wrong.";
+
+      } finally {
+        submit.disabled = false;
       }
-    } catch (error) {
-      message.textContent = error.message || "Something went wrong.";
-    } finally {
-      submit.disabled = false;
-    }
-  };
+    };
 
-  document.getElementById("th-google").onclick = async () => {
-    message.textContent = "Connecting to Google...";
-    const { error } = await db.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: window.location.origin }
-    });
-    if (error) message.textContent = error.message;
-  };
+  document.getElementById("th-google").onclick =
+    async () => {
+      message.textContent = "Connecting to Google...";
+
+      const { error } = await db.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin
+        }
+      });
+
+      if (error) message.textContent = error.message;
+    };
 
   logout.onclick = async () => {
     const { error } = await db.auth.signOut();
+
     if (error) {
       showToast(error.message);
     } else {
@@ -643,7 +815,12 @@ authScript.onload = async () => {
     else showAuth();
   });
 
-  const { data: sessionData } = await db.auth.getSession();
+  const { data: sessionData, error: sessionError } =
+    await db.auth.getSession();
+
+  if (sessionError) {
+    console.error(sessionError);
+  }
 
   if (sessionData.session) showApp();
   else showAuth();
@@ -654,5 +831,6 @@ authScript.onerror = () => {
 };
 
 document.head.appendChild(authScript);
+
 
 
