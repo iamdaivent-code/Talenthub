@@ -240,55 +240,387 @@ async function registerUser(userData) {
   return response.json();
 }
 */
-// ===== TALENTHUB AUTHENTICATION =====
 
-const SUPABASE_URL = "https://mlloveelzlnkoygefhcu.supabase.co"
+// ===== TALENTHUB PREMIUM AUTHENTICATION =====
+
+const SUPABASE_URL = "https://mlloveelzlnkoygefhcu.supabase.co";
 const SUPABASE_KEY = "sb_publishable_1fxhNvf73Qa8lAa31mNQUA_71NFIHt4"
-
 const authScript = document.createElement("script");
 authScript.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
 
-authScript.onload = () => {
-  const db = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
+authScript.onload = async () => {
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  const box = document.createElement("div");
-  box.id = "talenthub-auth";
-  box.innerHTML = `
-    <h2>Welcome to TalentHub</h2>
-    <input id="auth-email" type="email" placeholder="Your email">
-    <input id="auth-password" type="password" placeholder="Password">
-    <button id="signup-btn">Create Account</button>
-    <button id="login-btn">Login</button>
-    <button id="google-btn">Continue with Google</button>
-    <button id="logout-btn" style="display:none">Logout</button>
-    <p id="auth-message"></p>
+  const style = document.createElement("style");
+  style.textContent = `
+    #talenthub-auth-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #0c1020;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+      padding: 22px;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    .th-shell {
+      width: 100%;
+      max-width: 1000px;
+      min-height: 570px;
+      display: grid;
+      grid-template-columns: 1fr 0.9fr;
+      background: #151a30;
+      border: 1px solid #303653;
+      border-radius: 26px;
+      overflow: hidden;
+      box-shadow: 0 25px 80px #0008;
+    }
+
+    .th-left {
+      padding: 45px 35px;
+      background: radial-gradient(circle at 20% 20%, #493a91, #171a37 65%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .th-logo {
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .th-logo span { color: #a995ff; }
+
+    .th-tag {
+      color: #bdb6ff;
+      font-size: 12px;
+      letter-spacing: 3px;
+      font-weight: 700;
+    }
+
+    .th-heading {
+      font-size: clamp(32px, 5vw, 48px);
+      line-height: 1.12;
+      font-weight: 850;
+      margin: 15px 0;
+    }
+
+    .th-description {
+      color: #c2c5da;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .th-skills {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .th-skill {
+      padding: 13px;
+      background: #ffffff12;
+      border: 1px solid #ffffff20;
+      border-radius: 12px;
+      font-size: 12px;
+      color: #eeeaff;
+    }
+
+    .th-right {
+      padding: 40px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .th-right h2 {
+      font-size: 28px;
+      margin: 0 0 8px;
+      color: white;
+    }
+
+    .th-subtitle {
+      color: #aeb4ca;
+      font-size: 13px;
+      margin-bottom: 25px;
+    }
+
+    .th-tabs {
+      display: flex;
+      padding: 5px;
+      background: #0d1224;
+      border-radius: 11px;
+      margin-bottom: 22px;
+      gap: 5px;
+    }
+
+    .th-tabs button {
+      width: 50%;
+      border: 0;
+      border-radius: 8px;
+      padding: 12px;
+      color: #b8bdd0;
+      background: transparent;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .th-tabs button.active {
+      background: #785cff;
+      color: white;
+    }
+
+    .th-field {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 14px;
+      border: 1px solid #343c5a;
+      border-radius: 10px;
+      background: #0e1428;
+      color: white;
+      margin-bottom: 13px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .th-field:focus { border-color: #917cff; }
+
+    .th-main-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      padding: 15px;
+      background: linear-gradient(100deg, #7657ff, #a15dff);
+      color: white;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    .th-google {
+      width: 100%;
+      border: 1px solid #414864;
+      background: #202640;
+      color: white;
+      padding: 14px;
+      border-radius: 10px;
+      margin-top: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .th-divider {
+      text-align: center;
+      color: #858ba5;
+      font-size: 12px;
+      margin: 18px 0 5px;
+    }
+
+    #th-message {
+      color: #c3b5ff;
+      font-size: 13px;
+      margin-top: 15px;
+      overflow-wrap: anywhere;
+      line-height: 1.5;
+    }
+
+    #talenthub-signout {
+      display: none;
+      position: fixed;
+      z-index: 99998;
+      right: 15px;
+      bottom: 15px;
+      background: #7557ef;
+      color: white;
+      border: 0;
+      padding: 11px 17px;
+      border-radius: 25px;
+      font-weight: bold;
+    }
+
+    @media(max-width:700px) {
+      #talenthub-auth-screen { padding: 12px; }
+      .th-shell {
+        display: block;
+        min-height: auto;
+        max-width: 430px;
+      }
+      .th-left { padding: 23px; }
+      .th-heading { font-size: 30px; }
+      .th-skills { margin-top: 18px; }
+      .th-right { padding: 27px 22px; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  const root = document.createElement("div");
+  root.id = "talenthub-auth-screen";
+  root.innerHTML = `
+    <div class="th-shell">
+      <section class="th-left">
+        <div class="th-logo">Talent<span>Hub</span> ✦</div>
+        <div>
+          <div class="th-tag">DISCOVER · CREATE · CONNECT</div>
+          <div class="th-heading">
+            Your talent.<br>
+            Your stage.<br>
+            Your future.
+          </div>
+          <p class="th-description">
+            A place where creative minds meet new opportunities.
+            Showcase your skills and let the world discover what you can do.
+          </p>
+          <div class="th-skills">
+            <div class="th-skill">✦ Graphic Designers</div>
+            <div class="th-skill">▶ Video Editors</div>
+            <div class="th-skill">♫ Musicians</div>
+            <div class="th-skill">⌘ Developers</div>
+          </div>
+        </div>
+        <small style="color:#aeb0d0">TalentHub · Where talent meets opportunity.</small>
+      </section>
+
+      <section class="th-right">
+        <h2 id="th-title">Create your account</h2>
+        <p class="th-subtitle" id="th-subtitle">
+          Join a community built around your talent.
+        </p>
+
+        <div class="th-tabs">
+          <button id="th-signup-tab" class="active">Sign Up</button>
+          <button id="th-login-tab">Login</button>
+        </div>
+
+        <form id="th-form">
+          <input class="th-field" id="th-name"
+            placeholder="Your full name" autocomplete="name" required>
+
+          <input class="th-field" id="th-email"
+            type="email" placeholder="Email address"
+            autocomplete="email" required>
+
+          <input class="th-field" id="th-password"
+            type="password" placeholder="Password (minimum 6 characters)"
+            autocomplete="new-password" minlength="6" required>
+
+          <button class="th-main-btn" id="th-submit" type="submit">
+            Create my account →
+          </button>
+        </form>
+
+        <div class="th-divider">OR CONTINUE WITH</div>
+        <button class="th-google" id="th-google">
+          Continue with Google
+        </button>
+        <p id="th-message" aria-live="polite"></p>
+      </section>
+    </div>
   `;
 
-  document.body.prepend(box);
+  document.body.appendChild(root);
 
-  const message = document.getElementById("auth-message");
+  const logout = document.createElement("button");
+  logout.id = "talenthub-signout";
+  logout.textContent = "Sign out";
+  document.body.appendChild(logout);
 
-  document.getElementById("signup-btn").onclick = async () => {
-    const email = document.getElementById("auth-email").value;
-    const password = document.getElementById("auth-password").value;
+  let mode = "signup";
 
-    const { error } = await db.auth.signUp({ email, password });
-    message.textContent = error ? error.message :
-      "Account created! Check your email for confirmation.";
+  const nameField = document.getElementById("th-name");
+  const emailField = document.getElementById("th-email");
+  const passwordField = document.getElementById("th-password");
+  const message = document.getElementById("th-message");
+  const submit = document.getElementById("th-submit");
+
+  function showAuth() {
+    root.style.display = "flex";
+    logout.style.display = "none";
+    document.body.style.overflow = "hidden";
+  }
+
+  function showApp() {
+    root.style.display = "none";
+    logout.style.display = "block";
+    document.body.style.overflow = "";
+  }
+
+  function setMode(newMode) {
+    mode = newMode;
+    const signup = mode === "signup";
+
+    document.getElementById("th-signup-tab").classList.toggle("active", signup);
+    document.getElementById("th-login-tab").classList.toggle("active", !signup);
+
+    nameField.style.display = signup ? "block" : "none";
+    nameField.required = signup;
+    passwordField.autocomplete = signup ? "new-password" : "current-password";
+
+    document.getElementById("th-title").textContent =
+      signup ? "Create your account" : "Welcome back";
+
+    document.getElementById("th-subtitle").textContent =
+      signup ? "Join a community built around your talent." :
+      "Log in and continue your journey.";
+
+    submit.textContent = signup ? "Create my account →" : "Login to TalentHub →";
+    message.textContent = "";
+  }
+
+  document.getElementById("th-signup-tab").onclick = () => setMode("signup");
+  document.getElementById("th-login-tab").onclick = () => setMode("login");
+
+  document.getElementById("th-form").onsubmit = async event => {
+    event.preventDefault();
+    message.textContent = "Please wait...";
+    submit.disabled = true;
+
+    try {
+      const email = emailField.value.trim();
+      const password = passwordField.value;
+
+      if (mode === "signup") {
+        const { data, error } = await db.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name: nameField.value.trim() }
+          }
+        });
+
+        if (error) throw error;
+
+        if (data.session) {
+          message.textContent = "Account created successfully!";
+          showApp();
+        } else {
+          message.textContent =
+            "Account created! Please confirm your email, then log in.";
+        }
+      } else {
+        const { error } = await db.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) throw error;
+        message.textContent = "Login successful!";
+      }
+    } catch (error) {
+      message.textContent = error.message || "Something went wrong.";
+    } finally {
+      submit.disabled = false;
+    }
   };
 
-  document.getElementById("login-btn").onclick = async () => {
-    const email = document.getElementById("auth-email").value;
-    const password = document.getElementById("auth-password").value;
-
-    const { error } = await db.auth.signInWithPassword({ email, password });
-    message.textContent = error ? error.message : "Login successful!";
-  };
-
-  document.getElementById("google-btn").onclick = async () => {
+  document.getElementById("th-google").onclick = async () => {
+    message.textContent = "Connecting to Google...";
     const { error } = await db.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: window.location.origin }
@@ -296,10 +628,31 @@ authScript.onload = () => {
     if (error) message.textContent = error.message;
   };
 
-  document.getElementById("logout-btn").onclick = async () => {
-    await db.auth.signOut();
-    message.textContent = "Logged out successfully.";
+  logout.onclick = async () => {
+    const { error } = await db.auth.signOut();
+    if (error) {
+      showToast(error.message);
+    } else {
+      setMode("login");
+      showAuth();
+    }
   };
+
+  db.auth.onAuthStateChange((_event, session) => {
+    if (session) showApp();
+    else showAuth();
+  });
+
+  const { data: sessionData } = await db.auth.getSession();
+
+  if (sessionData.session) showApp();
+  else showAuth();
+};
+
+authScript.onerror = () => {
+  alert("Unable to load the login system. Please refresh the page.");
 };
 
 document.head.appendChild(authScript);
+
+
