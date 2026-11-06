@@ -101,34 +101,117 @@
           <article class="plan featured"><span class="popular">POPULAR</span><h3>Creator Plus</h3><p>For serious professionals</p><div class="amount">₹99 <small>/ month</small></div><ul><li><i class="fa-solid fa-check"></i> Higher portfolio limit</li><li><i class="fa-solid fa-check"></i> Priority listing</li><li><i class="fa-solid fa-check"></i> Advanced analytics</li><li><i class="fa-solid fa-check"></i> Profile customization</li><li><i class="fa-solid fa-check"></i> Verified badge after verification</li></ul><button class="full-btn" data-plan="plus">Choose Plus</button></article>
         </div>
       </section>
-
-      <section class="page" id="profile">
-        <div class="page-heading"><span class="eyebrow">YOUR IDENTITY</span><h1>My Creator Profile</h1><p>Manage the information clients see about you.</p></div>
-        <div class="panel profile-panel">
-          <div class="creator-row"><img id="profileAvatar" src="https://i.pravatar.cc/100?img=12" alt="Creator"><div><strong id="profileName">Your Name</strong><p id="profileSkill">Creative Professional</p></div></div>
-          <p id="profileBio" class="profile-bio">Add a short introduction about your work and skills.</p>
-          <button class="primary-btn" id="editProfileBtn">Edit Profile</button>
-        </div>
-        <div class="panel"><h3>Portfolio</h3><p>Your uploaded projects will be displayed here. Portfolio uploads can be connected to cloud storage later.</p><button class="primary-btn" id="addProjectBtn"> <i class="fa-solid fa-plus"></i> Add Project</button><div id="portfolioList"></div></div>
-      </section>
-    </div>
-  </main>
-</div>
-
-<div class="modal-bg" id="profileModal" aria-hidden="true">
-  <div class="modal">
-    <button class="close-modal" id="closeModal" aria-label="Close">×</button>
-    <h2>Edit Your Profile</h2><p>Update your creator information.</p>
-    <form id="profileForm">
-      <label>Full name<input id="creatorName" required maxlength="60" placeholder="Your name"></label>
-      <label>Main skill<input id="creatorSkill" required maxlength="60" placeholder="e.g. Video Editor"></label>
-      <label>Short bio<textarea id="creatorBio" required maxlength="300" placeholder="Tell clients about your work"></textarea></label>
-      <button class="full-btn" type="submit">Save Changes</button>
-    </form>
+<section class="page" id="profile">
+  <div class="page-heading">
+    <span class="eyebrow">YOUR IDENTITY</span>
+    <h1>My Creator Profile</h1>
+    <p>Build your professional identity and attract clients.</p>
   </div>
-</div>
 
-<div class="toast" id="toast" role="status"></div>
-<script src="app.js"></script>
-</body>
-</html>
+  <div class="panel">
+    <div class="profile-cover" id="profileCover">
+      <label class="cover-upload">
+        <i class="fa-solid fa-camera"></i> Change Cover
+        <input type="file" id="profileCoverInput" accept="image/*" hidden>
+      </label>
+    </div>
+
+    <div class="profile-main">
+      <div class="profile-photo-wrap">
+        <img id="profileAvatar" class="profile-photo"
+          src="https://i.pravatar.cc/150?img=12" alt="Profile photo">
+        <label class="photo-upload">
+          <i class="fa-solid fa-camera"></i>
+          <input type="file" id="profilePhotoInput" accept="image/*" hidden>
+        </label>
+      </div>
+
+      <div class="profile-details">
+        <h2 id="profileName">Your Name</h2>
+        <p id="profileUsername">@username</p>
+        <p id="profileSkill">Creative Professional</p>
+      </div>
+    </div>
+
+    <div class="profile-editor">
+      <h3>Profile information</h3>
+
+      <label>Full Name
+        <input id="profileFullName" placeholder="Enter your full name">
+      </label>
+
+      <div class="form-grid">
+        <label>Username
+          <input id="profileUsernameInput" placeholder="@username">
+        </label>
+
+        <label>Gender
+          <select id="profileGender">
+            <option value="">Select gender</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+            <option>Prefer not to say</option>
+          </select>
+        </label>
+      </div>
+
+      <label>Professional Title
+        <input id="profileTitle" placeholder="e.g. Professional Video Editor">
+      </label>
+
+      <div class="form-grid">
+        <label>Category
+          <select id="profileCategory">
+            <option value="">Choose category</option>
+            <option>Video Editing</option>
+            <option>Graphic Design</option>
+            <option>Photography</option>
+            <option>Content Writing</option>
+            <option>Web Development</option>
+            <option>Music & Singing</option>
+            <option>Other</option>
+          </select>
+        </label>
+
+        <label>Location
+          <input id="profileLocation" placeholder="Your city">
+        </label>
+      </div>
+
+      <label>Bio
+        <textarea id="profileBioInput" maxlength="500"
+          placeholder="Tell people about yourself and your work"></textarea>
+      </label>
+
+      <label>Skills
+        <input id="profileSkills" placeholder="Video editing, Photoshop, etc.">
+      </label>
+
+      <label>Hourly Rate (₹)
+        <input id="profileRate" type="number" min="0" placeholder="e.g. 200">
+      </label>
+
+      <div class="profile-actions">
+        <button class="primary-btn" id="saveProfessionalProfile">
+          Save Profile
+        </button>
+      </div>
+
+      <div class="profile-completion">
+        <span id="profileCompletionBar"></span>
+      </div>
+      <p id="profileCompletionText">Profile completion: 0%</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Portfolio</h3>
+    <p>Show clients your best work.</p>
+    <button class="primary-btn" id="addProjectBtn">
+      <i class="fa-solid fa-plus"></i> Add Project
+    </button>
+    <div id="portfolioList"></div>
+  </div>
+</section>
+  
