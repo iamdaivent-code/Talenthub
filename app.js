@@ -242,7 +242,7 @@ async function registerUser(userData) {
 */
 // ===== TALENTHUB AUTHENTICATION =====
 
-const SUPABASE_URL = "https://mlloveelzlnkoygefhcu.supabase.co/rest/v1/"
+const SUPABASE_URL = "https://mlloveelzlnkoygefhcu.supabase.co"
 const SUPABASE_KEY = "sb_publishable_1fxhNvf73Qa8lAa31mNQUA_71NFIHt4"
 
 const authScript = document.createElement("script");
