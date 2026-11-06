@@ -148,3 +148,168 @@ button,input,textarea{font:inherit}button{cursor:pointer;border:0}
     padding: 25px 18px;
   }
 }
+/* ===== TALENTHUB PROFESSIONAL PROFILE ===== */
+
+.profile-cover {
+  width: 100%;
+  height: 210px;
+  background: linear-gradient(120deg, #21194b, #7657ff);
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+
+.profile-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cover-upload {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  background: #17152bcc;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.profile-main {
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+  margin: -48px 22px 20px;
+  position: relative;
+}
+
+.profile-photo-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.profile-photo {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  border: 5px solid white;
+  object-fit: cover;
+  background: #eee;
+}
+
+.photo-upload {
+  position: absolute;
+  right: 0;
+  bottom: 5px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.profile-details {
+  min-width: 0;
+  padding-bottom: 8px;
+}
+
+.profile-details h2 {
+  font-size: 21px;
+  overflow-wrap: anywhere;
+}
+
+.profile-details p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.profile-editor {
+  max-width: 750px;
+}
+
+.profile-editor label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  margin: 16px 0;
+}
+
+.profile-editor input,
+.profile-editor textarea,
+.profile-editor select {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  margin-top: 8px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: white;
+  outline-color: var(--primary);
+  color: var(--dark);
+}
+
+.profile-editor textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.profile-editor .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.profile-completion {
+  height: 8px;
+  background: #eeecf5;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.profile-completion span {
+  display: block;
+  width: 0%;
+  height: 100%;
+  background: var(--primary);
+  transition: .3s;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media(max-width:600px) {
+  .profile-cover {
+    height: 145px;
+  }
+
+  .profile-main {
+    margin: -38px 12px 20px;
+    gap: 12px;
+  }
+
+  .profile-photo {
+    width: 85px;
+    height: 85px;
+  }
+
+  .profile-details h2 {
+    font-size: 17px;
+  }
+
+  .profile-editor .form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
