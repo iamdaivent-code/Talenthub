@@ -240,3 +240,66 @@ async function registerUser(userData) {
   return response.json();
 }
 */
+// ===== TALENTHUB AUTHENTICATION =====
+
+const SUPABASE_URL = https://mlloveelzlnkoygefhcu.supabase.co/rest/v1/
+const SUPABASE_KEY = sb_publishable_1fxhNvf73Qa8lAa31mNQUA_71NFIHt4
+
+const authScript = document.createElement("script");
+authScript.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+
+authScript.onload = () => {
+  const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+  const box = document.createElement("div");
+  box.id = "talenthub-auth";
+  box.innerHTML = `
+    <h2>Welcome to TalentHub</h2>
+    <input id="auth-email" type="email" placeholder="Your email">
+    <input id="auth-password" type="password" placeholder="Password">
+    <button id="signup-btn">Create Account</button>
+    <button id="login-btn">Login</button>
+    <button id="google-btn">Continue with Google</button>
+    <button id="logout-btn" style="display:none">Logout</button>
+    <p id="auth-message"></p>
+  `;
+
+  document.body.prepend(box);
+
+  const message = document.getElementById("auth-message");
+
+  document.getElementById("signup-btn").onclick = async () => {
+    const email = document.getElementById("auth-email").value;
+    const password = document.getElementById("auth-password").value;
+
+    const { error } = await db.auth.signUp({ email, password });
+    message.textContent = error ? error.message :
+      "Account created! Check your email for confirmation.";
+  };
+
+  document.getElementById("login-btn").onclick = async () => {
+    const email = document.getElementById("auth-email").value;
+    const password = document.getElementById("auth-password").value;
+
+    const { error } = await db.auth.signInWithPassword({ email, password });
+    message.textContent = error ? error.message : "Login successful!";
+  };
+
+  document.getElementById("google-btn").onclick = async () => {
+    const { error } = await db.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin }
+    });
+    if (error) message.textContent = error.message;
+  };
+
+  document.getElementById("logout-btn").onclick = async () => {
+    await db.auth.signOut();
+    message.textContent = "Logged out successfully.";
+  };
+};
+
+document.head.appendChild(authScript);
