@@ -1,5 +1,3 @@
-/* TalentHub frontend JavaScript.
-   Demo data is local. Replace these functions with backend API calls later. */
 
 "use strict";
 
@@ -15,44 +13,42 @@ const creators = [
 let activeFilter = "All";
 
 function navigate(pageId) {
-  document.querySelectorAll(".page").forEach(page => page.classList.remove("active"));
-  document.querySelectorAll(".nav-link[data-page]").forEach(link => link.classList.remove("active"));
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".nav-link[data-page]").forEach(a => a.classList.remove("active"));
 
-  const page = document.getElementById(pageId);
-  if (page) page.classList.add("active");
-
-  const nav = document.querySelector(`.nav-link[data-page="${pageId}"]`);
-  if (nav) nav.classList.add("active");
+  document.getElementById(pageId)?.classList.add("active");
+  document.querySelector(`.nav-link[data-page="${pageId}"]`)?.classList.add("active");
 
   window.scrollTo({top:0,behavior:"smooth"});
 }
 
 function showToast(message) {
   const toast = document.getElementById("toast");
-  if (!toast) return;
+  if (!toast) {
+    alert(message);
+    return;
+  }
   toast.textContent = message;
   toast.style.display = "block";
-  window.clearTimeout(showToast.timer);
-  showToast.timer = window.setTimeout(() => {
-    toast.style.display = "none";
-  }, 2600);
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => toast.style.display = "none", 2600);
 }
 
 function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  })[char]);
+  })[c]);
 }
 
 function createCreatorCard(person) {
   return `
     <article class="talent-card">
-      <img class="talent-image" src="${person.work}" alt="Portfolio sample for ${escapeHTML(person.name)}" loading="lazy">
+      <img class="talent-image" src="${person.work}" alt="Portfolio sample">
       <div class="talent-info">
         <div class="creator-row">
-          <img src="${person.image}" alt="${escapeHTML(person.name)}" loading="lazy">
+          <img src="${person.image}" alt="${escapeHTML(person.name)}">
           <div>
-            <div class="creator-name">${escapeHTML(person.name)} <i class="fa-solid fa-circle-check verified" aria-label="Featured"></i></div>
+            <div class="creator-name">${escapeHTML(person.name)}</div>
             <div class="creator-role">${escapeHTML(person.skill)}</div>
           </div>
         </div>
@@ -74,18 +70,18 @@ function renderCreators(list, containerId) {
     : "<p>No creators found. Try another search.</p>";
 
   if (containerId === "exploreTalent") {
-    const count = document.getElementById("resultCount");
-    if (count) count.textContent = `Showing ${list.length} creator${list.length === 1 ? "" : "s"}`;
+    document.getElementById("resultCount").textContent =
+      `Showing ${list.length} creators`;
   }
 }
 
 function applyExploreFilters() {
-  const query = (document.getElementById("globalSearch")?.value || "").trim().toLowerCase();
+  const query = (document.getElementById("globalSearch")?.value || "").toLowerCase().trim();
 
   const filtered = creators.filter(person => {
-    const matchesCategory = activeFilter === "All" || person.skill === activeFilter;
-    const searchable = `${person.name} ${person.skill} ${person.bio}`.toLowerCase();
-    return matchesCategory && searchable.includes(query);
+    const categoryMatch = activeFilter === "All" || person.skill === activeFilter;
+    const text = `${person.name} ${person.skill} ${person.bio}`.toLowerCase();
+    return categoryMatch && text.includes(query);
   });
 
   renderCreators(filtered, "exploreTalent");
@@ -93,85 +89,194 @@ function applyExploreFilters() {
 
 function filterTalent(skill) {
   activeFilter = skill;
+
   document.querySelectorAll(".filter-btn").forEach(button => {
     button.classList.toggle("active", button.dataset.filter === skill);
   });
+
   navigate("explore");
   applyExploreFilters();
 }
 
 function viewCreator(id) {
-  const person = creators.find(item => item.id === Number(id));
-  if (!person) return;
-  showToast(`${person.name} — ${person.skill}. Dynamic profiles will be loaded from the backend later.`);
+  const person = creators.find(p => p.id === Number(id));
+  if (person) showToast(`${person.name} — ${person.skill}`);
 }
 
-function openProfileModal() {
-  loadSavedProfile();
-  const modal = document.getElementById("profileModal");
-  modal?.classList.add("show");
-  modal?.setAttribute("aria-hidden", "false");
-}
+/* ===== PROFESSIONAL PROFILE ===== */
 
-function closeProfileModal() {
-  const modal = document.getElementById("profileModal");
-  modal?.classList.remove("show");
-  modal?.setAttribute("aria-hidden", "true");
-}
-
-function loadSavedProfile() {
+function getProfile() {
   try {
-    const profile = JSON.parse(localStorage.getItem("talenthub_profile") || "null");
-    if (!profile) return;
-    document.getElementById("creatorName").value = profile.name || "";
-    document.getElementById("creatorSkill").value = profile.skill || "";
-    document.getElementById("creatorBio").value = profile.bio || "";
-    document.getElementById("profileName").textContent = profile.name || "Your Name";
-    document.getElementById("profileSkill").textContent = profile.skill || "Creative Professional";
-    document.getElementById("profileBio").textContent = profile.bio || "Add a short introduction about your work and skills.";
-  } catch (error) {
-    console.error("Could not load saved profile:", error);
+    return JSON.parse(localStorage.getItem("talenthub_profile")) || {};
+  } catch {
+    return {};
   }
 }
 
-function saveProfile(event) {
-  event.preventDefault();
+function saveProfileData(profile) {
+  try {
+    localStorage.setItem("talenthub_profile", JSON.stringify(profile));
+    return true;
+  } catch (error) {
+    showToast("Storage full. Try a smaller photo.");
+    return false;
+  }
+}
 
-  const profile = {
-    name: document.getElementById("creatorName").value.trim(),
-    skill: document.getElementById("creatorSkill").value.trim(),
-    bio: document.getElementById("creatorBio").value.trim()
+function updateCompletion(profile) {
+  const fields = [
+    profile.name,
+    profile.username,
+    profile.title,
+    profile.gender,
+    profile.category,
+    profile.location,
+    profile.bio,
+    profile.skills,
+    profile.rate
+  ];
+
+  const completed = fields.filter(v => String(v || "").trim()).length;
+  const percentage = Math.round(completed / fields.length * 100);
+
+  const bar = document.getElementById("profileCompletionBar");
+  const text = document.getElementById("profileCompletionText");
+
+  if (bar) bar.style.width = percentage + "%";
+  if (text) text.textContent = `Profile completion: ${percentage}%`;
+}
+
+function loadProfessionalProfile() {
+  const p = getProfile();
+
+  const fields = {
+    profileFullName: p.name,
+    profileUsernameInput: p.username,
+    profileGender: p.gender,
+    profileTitle: p.title,
+    profileCategory: p.category,
+    profileLocation: p.location,
+    profileBioInput: p.bio,
+    profileSkills: p.skills,
+    profileRate: p.rate
   };
 
-  if (!profile.name || !profile.skill || !profile.bio) {
-    showToast("Please complete all profile fields.");
+  Object.entries(fields).forEach(([id, value]) => {
+    const element = document.getElementById(id);
+    if (element && value !== undefined) element.value = value;
+  });
+
+  const name = document.getElementById("profileName");
+  const username = document.getElementById("profileUsername");
+  const skill = document.getElementById("profileSkill");
+  const bio = document.getElementById("profileBioInput");
+  const avatar = document.getElementById("profileAvatar");
+  const cover = document.getElementById("profileCover");
+
+  if (name) name.textContent = p.name || "Your Name";
+  if (username) username.textContent = p.username
+    ? (p.username.startsWith("@") ? p.username : "@" + p.username)
+    : "@username";
+
+  if (skill) skill.textContent = p.title || p.category || "Creative Professional";
+  if (avatar && p.photo) avatar.src = p.photo;
+  if (cover && p.cover) cover.style.backgroundImage = `url("${p.cover}")`;
+
+  updateCompletion(p);
+
+  const topAvatar = document.querySelector(".topbar .avatar");
+  if (topAvatar && p.photo) topAvatar.src = p.photo;
+}
+
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    if (!file || !file.type.startsWith("image/")) {
+      reject(new Error("Please select an image."));
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const image = new Image();
+
+      image.onload = () => {
+        const canvas = document.createElement("canvas");
+        const scale = Math.min(800 / image.width, 800 / image.height, 1);
+
+        canvas.width = image.width * scale;
+        canvas.height = image.height * scale;
+
+        const context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        resolve(canvas.toDataURL("image/jpeg", 0.75));
+      };
+
+      image.onerror = reject;
+      image.src = reader.result;
+    };
+
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function uploadProfileImage(inputId, property) {
+  const input = document.getElementById(inputId);
+
+  input?.addEventListener("change", async () => {
+    const file = input.files?.[0];
+    if (!file) return;
+
+    try {
+      const imageData = await compressImage(file);
+      const profile = getProfile();
+      profile[property] = imageData;
+
+      if (saveProfileData(profile)) {
+        loadProfessionalProfile();
+        showToast(property === "photo" ? "Profile photo updated!" : "Cover photo updated!");
+      }
+    } catch (error) {
+      showToast(error.message || "Image upload failed.");
+    }
+
+    input.value = "";
+  });
+}
+
+function saveProfessionalProfile() {
+  const profile = {
+    ...getProfile(),
+    name: document.getElementById("profileFullName").value.trim(),
+    username: document.getElementById("profileUsernameInput").value.trim(),
+    gender: document.getElementById("profileGender").value,
+    title: document.getElementById("profileTitle").value.trim(),
+    category: document.getElementById("profileCategory").value,
+    location: document.getElementById("profileLocation").value.trim(),
+    bio: document.getElementById("profileBioInput").value.trim(),
+    skills: document.getElementById("profileSkills").value.trim(),
+    rate: document.getElementById("profileRate").value.trim()
+  };
+
+  if (!profile.name) {
+    showToast("Please enter your full name.");
     return;
   }
 
-  // Temporary browser-only demo storage. Use a backend for real accounts.
-  localStorage.setItem("talenthub_profile", JSON.stringify(profile));
-  loadSavedProfile();
-  closeProfileModal();
-  showToast("Profile saved on this device.");
+  if (saveProfileData(profile)) {
+    loadProfessionalProfile();
+    showToast("Your profile has been saved on this device!");
+  }
 }
 
-async function startCheckout(plan) {
-  const plans = {
-    pro: {name:"Creator Pro", amount:49},
-    plus: {name:"Creator Plus", amount:99}
-  };
-  const selectedPlan = plans[plan];
-  if (!selectedPlan) return showToast("Invalid plan selected.");
-
-  // Future integration: call your server to create a payment order.
-  // Never put Razorpay/Cashfree secret keys in frontend JavaScript.
-  showToast(`${selectedPlan.name} selected. Payment gateway is not connected yet.`);
-}
+/* ===== APP STARTUP ===== */
 
 function initApp() {
   renderCreators(creators.slice(0, 3), "homeTalent");
   renderCreators(creators, "exploreTalent");
-  loadSavedProfile();
+  loadProfessionalProfile();
 
   document.querySelectorAll(".nav-link[data-page]").forEach(link => {
     link.addEventListener("click", () => navigate(link.dataset.page));
@@ -191,55 +296,45 @@ function initApp() {
 
   document.getElementById("globalSearch")?.addEventListener("input", () => {
     activeFilter = "All";
-    document.querySelectorAll(".filter-btn").forEach(button => {
-      button.classList.toggle("active", button.dataset.filter === "All");
+    document.querySelectorAll(".filter-btn").forEach(b => {
+      b.classList.toggle("active", b.dataset.filter === "All");
     });
     navigate("explore");
     applyExploreFilters();
   });
 
   document.addEventListener("click", event => {
-    const profileButton = event.target.closest("[data-creator-id]");
-    if (profileButton) viewCreator(profileButton.dataset.creatorId);
+    const creatorButton = event.target.closest("[data-creator-id]");
+    if (creatorButton) viewCreator(creatorButton.dataset.creatorId);
 
     const planButton = event.target.closest("[data-plan]");
-    if (planButton) startCheckout(planButton.dataset.plan);
+    if (planButton) {
+      showToast(planButton.dataset.plan === "pro"
+        ? "Creator Pro selected. Payment is not connected yet."
+        : "Creator Plus selected. Payment is not connected yet.");
+    }
   });
 
-  document.getElementById("editProfileBtn")?.addEventListener("click", openProfileModal);
-  document.getElementById("closeModal")?.addEventListener("click", closeProfileModal);
-  document.getElementById("profileForm")?.addEventListener("submit", saveProfile);
-  document.getElementById("profileModal")?.addEventListener("click", event => {
-    if (event.target.id === "profileModal") closeProfileModal();
-  });
+  document.getElementById("saveProfessionalProfile")
+    ?.addEventListener("click", saveProfessionalProfile);
+
+  uploadProfileImage("profilePhotoInput", "photo");
+  uploadProfileImage("profileCoverInput", "cover");
 
   document.getElementById("addProjectBtn")?.addEventListener("click", () => {
-    showToast("Portfolio upload will be connected to cloud storage later.");
+    showToast("Portfolio upload will be added in a future update.");
   });
-  document.getElementById("settingsBtn")?.addEventListener("click", () => showToast("Settings coming soon."));
-  document.getElementById("notificationsBtn")?.addEventListener("click", () => showToast("No new notifications."));
+
+  document.getElementById("settingsBtn")?.addEventListener("click", () => {
+    showToast("Settings coming soon.");
+  });
+
+  document.getElementById("notificationsBtn")?.addEventListener("click", () => {
+    showToast("No new notifications.");
+  });
 }
 
 document.addEventListener("DOMContentLoaded", initApp);
-
-/* BACKEND INTEGRATION PLACEHOLDERS
-async function fetchCreatorsFromBackend() {
-  const response = await fetch("https://YOUR_API_URL/api/creators");
-  if (!response.ok) throw new Error("Unable to fetch creators");
-  const data = await response.json();
-  renderCreators(data, "exploreTalent");
-}
-
-async function registerUser(userData) {
-  const response = await fetch("https://YOUR_API_URL/api/auth/register", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify(userData)
-  });
-  if (!response.ok) throw new Error("Registration failed");
-  return response.json();
-}
-*/
 
 /* ===== TALENTHUB PREMIUM AUTHENTICATION ===== */
 
