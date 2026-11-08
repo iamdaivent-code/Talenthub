@@ -349,7 +349,7 @@ authScript.onload = async () => {
     SUPABASE_URL,
     SUPABASE_KEY
   );
-
+window.talenthubSupabase = db;
   const style = document.createElement("style");
 
   style.textContent = `
