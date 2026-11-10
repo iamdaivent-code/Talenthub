@@ -222,6 +222,7 @@ function compressImage(file) {
   });
 }
 
+
 async function uploadProfileImage(inputId, property) {
   const input = document.getElementById(inputId);
 
@@ -230,14 +231,58 @@ async function uploadProfileImage(inputId, property) {
     if (!file) return;
 
     try {
-      const imageData = await compressImage(file);
-      const profile = getProfile();
-      profile[property] = imageData;
+      const db = window.talenthubSupabase;
 
-      if (saveProfileData(profile)) {
-        loadProfessionalProfile();
-        showToast(property === "photo" ? "Profile photo updated!" : "Cover photo updated!");
+      if (!db) {
+        throw new Error("Supabase is not connected. Please refresh.");
       }
+
+      if (!file.type.startsWith("image/")) {
+        throw new Error("Please select an image file.");
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error("Image must be smaller than 5 MB.");
+      }
+
+      const { data: userData, error: userError } =
+        await db.auth.getUser();
+
+      if (userError || !userData.user) {
+        throw new Error("Please login first.");
+      }
+
+      const userId = userData.user.id;
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+      const filePath = `${userId}/${property}-${Date.now()}-${safeName}`;
+
+      const { error: uploadError } = await db.storage
+        .from("profile-media")
+        .upload(filePath, file, {
+          cacheControl: "3600",
+          upsert: false
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = db.storage
+        .from("profile-media")
+        .getPublicUrl(filePath);
+
+      const profile = getProfile();
+      profile[property] = urlData.publicUrl;
+
+      if (!saveProfileData(profile)) {
+        throw new Error("Could not save profile information.");
+      }
+
+      loadProfessionalProfile();
+      showToast(
+        property === "photo"
+          ? "Profile photo uploaded!"
+          : "Cover photo uploaded!"
+      );
+
     } catch (error) {
       showToast(error.message || "Image upload failed.");
     }
@@ -245,6 +290,7 @@ async function uploadProfileImage(inputId, property) {
     input.value = "";
   });
 }
+
 
 function saveProfessionalProfile() {
   const profile = {
